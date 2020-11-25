@@ -1,0 +1,12 @@
+{
+  "name": "recognition-app",
+  "displayName": "recognition-app",
+  "expo": {
+    "name": "recognition-app",
+    "slug": "recognition-app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
