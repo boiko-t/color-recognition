@@ -7,14 +7,9 @@ import {
   Layout,
   Text,
 } from '@ui-kitten/components';
-import { BookIcon, HomeIcon } from '../../components/icons';
+import { BookIcon, HomeIcon } from '../components/icons';
 
-const DATA: Array<{}> = [
-  { title: 'Home', icon: HomeIcon },
-  { title: 'Documentation', icon: BookIcon },
-];
-
-export const HomeDrawer = ({ navigation }): ReactElement => {
+export default ({ navigation }): ReactElement => {
   const onItemSelect = (index: number): void => {
     switch (index) {
       case 0: {
@@ -34,7 +29,7 @@ export const HomeDrawer = ({ navigation }): ReactElement => {
       <View style={styles.profileContainer}>
         <Avatar
           size='giant'
-          source={require('../../assets/images/image-app-icon.png')}
+          source={require('../assets/images/image-app-icon.png')}
         />
         <Text style={styles.profileName} category='h6'>
           Kitten Tricks
@@ -44,7 +39,7 @@ export const HomeDrawer = ({ navigation }): ReactElement => {
   );
 
   const renderFooter = (): ReactElement => (
-    <Text style={styles.footer} category='c2'>Build by Taisa Boiko</Text>
+    <Text style={styles.footer} category='c1'>Build by Taisa Boiko</Text>
   );
 
   return (

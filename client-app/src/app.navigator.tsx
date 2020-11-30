@@ -1,6 +1,6 @@
 import React from 'react';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import { Text } from '@ui-kitten/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import HomeScreen from './screens/home';
 
 /*
@@ -16,6 +16,8 @@ const navigatorTheme = {
 
 export const AppNavigator = (): React.ReactElement => (
   <NavigationContainer theme={navigatorTheme}>
-    <HomeScreen/>
+    <SafeAreaView style={{ flex: 1}} edges={['top']}>
+      <HomeScreen />
+    </SafeAreaView>
   </NavigationContainer>
 );
