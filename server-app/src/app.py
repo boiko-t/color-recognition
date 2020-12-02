@@ -6,6 +6,7 @@ import cv2
 from collections import Counter
 from skimage.color import rgb2lab, deltaE_cie76
 import os
+import json
 
 app = Flask(__name__)
 
@@ -14,7 +15,9 @@ def RGB2HEX(color):
 
 
 def get_image_from_request(file):
-    uploaded_file = file.read()
+    uploaded_file = file
+    if isinstance(file, str) == False :
+        uploaded_file = file.read()
     np_image = np.fromstring(uploaded_file, np.uint8)
     return cv2.imdecode(np_image, cv2.IMREAD_COLOR)
 
@@ -34,7 +37,7 @@ def get_colors(image, number_of_colors):
 
 @app.route('/')
 def index():
-    return '<form method="POST" action="" enctype="multipart/form-data"><p><input type="file" name="file"></p><p><input type="submit" value="Submit"></p></form>'
+    return 'INDEX'
 
 @app.route("/get-color", methods=["GET"])
 def get_color():
@@ -42,10 +45,13 @@ def get_color():
     who = request.args.get("who", "World")
     return "Hello " +  who
 
-@app.route('/', methods=['POST'])
+@app.route('/get-color', methods=['POST'])
 def upload_file():
-    image = get_image_from_request(request.files['file'])
-    return ', '.join(get_colors(image, 8))
+    if request.files['file']:
+        image = get_image_from_request(request.files['file'])
+    else:
+        image = get_image_from_request(request.form['file'])
+    return json.dumps(get_colors(image, 8))
 
 
 if __name__ == "__main__":
