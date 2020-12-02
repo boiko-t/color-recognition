@@ -1,4 +1,5 @@
 export enum AppConfigs {
     Name = 'Manicure Assistant',
-    Author = 'Taisa Boiko'
+    Author = 'Taisa Boiko',
+    APIAddress = 'https://test-sfc5k4dcaa-ew.a.run.app',
 }
