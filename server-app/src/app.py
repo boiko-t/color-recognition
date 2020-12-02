@@ -5,19 +5,29 @@ import numpy as np
 import cv2
 from collections import Counter
 from skimage.color import rgb2lab, deltaE_cie76
-import os
+import base64
 import json
+import re
 
 app = Flask(__name__)
 
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
 
+def readb64(uri):
+   uri = re.split('data:image/(jpeg|png);base64(.*)', uri)[2]
+   nparr = np.fromstring(base64.b64decode(uri), np.uint8)
+   img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+   img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+   return img
 
 def get_image_from_request(file):
     uploaded_file = file
-    if isinstance(file, str) == False :
-        uploaded_file = file.read()
+    if isinstance(file, str):
+        print('HELLO')
+        return readb64(file)
+
+    uploaded_file = file.read()
     np_image = np.fromstring(uploaded_file, np.uint8)
     return cv2.imdecode(np_image, cv2.IMREAD_COLOR)
 
@@ -39,19 +49,13 @@ def get_colors(image, number_of_colors):
 def index():
     return 'INDEX'
 
-@app.route("/get-color", methods=["GET"])
-def get_color():
-    """ Return a friendly HTTP greeting. """
-    who = request.args.get("who", "World")
-    return "Hello " +  who
-
 @app.route('/get-color', methods=['POST'])
 def upload_file():
-    if request.files['file']:
+    if request.files:
         image = get_image_from_request(request.files['file'])
     else:
-        image = get_image_from_request(request.form['file'])
-    return json.dumps(get_colors(image, 8))
+        image = get_image_from_request(request.data)
+    return json.dumps({'colors': get_colors(image, 8)})
 
 
 if __name__ == "__main__":
