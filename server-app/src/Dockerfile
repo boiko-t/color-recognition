@@ -5,7 +5,7 @@ FROM python:3.9-buster
 # Install production dependencies.
 RUN pip install --upgrade pip
 RUN pip install numpy
-RUN pip install Flask gunicorn KMeans opencv-python-headless scikit-learn
+RUN pip install Flask flask_cors gunicorn KMeans opencv-python-headless scikit-learn
 
 # Copy local code to the container image.
 # WORKDIR /app

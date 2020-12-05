@@ -1,14 +1,14 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
+from flask_cors import CORS
 from sklearn.cluster import KMeans
 import numpy as np
 import cv2
 from collections import Counter
 import base64
-import json
 import re
-from io import BytesIO
 
 app = Flask(__name__)
+CORS(app)
 
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
@@ -20,17 +20,16 @@ def readb64(uri):
    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
    return img
 
-def get_image_from_request(file):
-    # uploaded_file = file
-    # if isinstance(file, str):
-    #     print('HELLO')
-    #     return readb64(file)
-  print('GET IMG')
-  uploaded_file = BytesIO(file)
-  print('READ')
-  uploaded_file = uploaded_file.read()
+def get_image_from_file(file):
+  uploaded_file = file.read()
   np_image = np.fromstring(uploaded_file, np.uint8)
   return cv2.imdecode(np_image, cv2.IMREAD_COLOR)
+
+def get_image_from_data(file):
+   nparr = np.frombuffer(base64.b64decode(file), np.uint8)
+   img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+   img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+   return img
 
 def get_colors(image, number_of_colors):
   modified_image = cv2.resize(image, (600, 400), interpolation = cv2.INTER_AREA)
@@ -53,10 +52,12 @@ def index():
 @app.route('/get-color', methods=['POST'])
 def upload_file():
     if request.files:
-        image = get_image_from_request(request.files['file'])
+        image = get_image_from_file(request.files['file'])
     else:
-        image = get_image_from_request(request.data)
-    return json.dumps({'colors': get_colors(image, 8)})
+        image = get_image_from_data(request.data)
+    result = get_colors(image, 8)
+    return jsonify(colors=result)
+    # return json.dumps({'data': request.data})
 
 
 if __name__ == "__main__":
