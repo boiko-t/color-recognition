@@ -5,29 +5,37 @@ import { ImagePickerResult } from 'expo-image-picker';
 export const getColorsFromImage = async (image): Promise<Array<string>> => {
   let result;
   let contentType: string = 'multipart/form-data';
-  let uri = image.uri;
+  // debugger;
 
   if (Platform.OS !== 'web') {
     result = new FormData();
-    let filename = uri.split('/').pop() as string;
+    let filename = image.uri.split('/').pop() as string;
     let match = /\.(\w+)$/.exec(filename);
     let type = match ? `image/${match[1]}` : `image`;
-    result.append('file', { uri, name: filename, type });
+    result.append('file', { uri: image.uri, name: filename, type });
     console.log(filename);
     console.log(filename);
   } else {
-    result = new FormData();
-    result.append('file', { uri, name: 'image.jpeg', type: 'image/jpeg' });
-    // contentType = 'application/json';
+    contentType = 'application/json';
+    // let [_, fileType, file] = ;
+    result = image.uri.match(/data:image\/(.*);base64(.*)/)[2];
+    // result.append('file', {
+    //   uri,
+    //   name: `image.${fileType}`,
+    //   type: `image/${fileType}`,
+    // });
   }
 
   try {
-    let response: Response = await fetch(`${AppConfigs.APIAddressLocal}/get-color`, {
-      method: 'POST',
-      body: result,
-      headers: { 'content-type': contentType },
-      mode: 'no-cors',
-    });
+    let response: Response = await fetch(
+      `${AppConfigs.APIAddressLocal}/get-color`,
+      {
+        method: 'POST',
+        body: result,
+        headers: { 'content-type': contentType },
+        mode: 'no-cors',
+      },
+    );
     let json = await response.json();
     return json.colors;
   } catch (e) {
