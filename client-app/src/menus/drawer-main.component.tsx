@@ -4,24 +4,17 @@ import {
   Avatar,
   Drawer,
   DrawerItem,
+  IndexPath,
   Layout,
   Text,
 } from '@ui-kitten/components';
 import { BookIcon, HomeIcon } from '../components/icons';
+import {navigationList} from '../types/Navigation';
 
 export default ({ navigation }): ReactElement => {
-  const onItemSelect = (index: number): void => {
-    switch (index) {
-      case 0: {
-        navigation.toggleDrawer();
-        navigation.navigate('Libraries');
-        return;
-      }
-      case 1: {
-        navigation.toggleDrawer();
-        return;
-      }
-    }
+  const onItemSelect = (index: IndexPath): void => {
+    navigation.toggleDrawer();
+    navigation.navigate(navigationList[index.row].path);
   };
 
   const renderHeader = (): ReactElement => (
@@ -45,7 +38,7 @@ export default ({ navigation }): ReactElement => {
   return (
     <Drawer header={renderHeader} footer={renderFooter} onSelect={onItemSelect}>
       <DrawerItem title='Home' accessoryLeft={HomeIcon} />
-      <DrawerItem title='Other' accessoryLeft={BookIcon} />
+      <DrawerItem title='Products' accessoryLeft={BookIcon} />
     </Drawer>
   );
 };
