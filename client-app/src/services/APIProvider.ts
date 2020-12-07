@@ -5,7 +5,6 @@ import { ImagePickerResult } from 'expo-image-picker';
 export const getColorsFromImage = async (image): Promise<Array<string>> => {
   let result;
   let contentType: string = 'multipart/form-data';
-  // debugger;
 
   if (Platform.OS !== 'web') {
     result = new FormData();
@@ -16,11 +15,12 @@ export const getColorsFromImage = async (image): Promise<Array<string>> => {
     console.log(filename);
     console.log(filename);
   } else {
-    contentType = 'application/json';
-    // let [_, fileType, file] = ;
+    contentType = 'text';
+    // let [_, fileType, uri] = image.uri.match(/data:image\/(.*);base64(.*)/);
     result = image.uri.match(/data:image\/(.*);base64(.*)/)[2];
+    // result = new FormData();
     // result.append('file', {
-    //   uri,
+    //   uri: image.uri,
     //   name: `image.${fileType}`,
     //   type: `image/${fileType}`,
     // });
@@ -32,8 +32,8 @@ export const getColorsFromImage = async (image): Promise<Array<string>> => {
       {
         method: 'POST',
         body: result,
-        headers: { 'content-type': contentType },
-        mode: 'no-cors',
+        headers: { 'Content-Type': contentType },
+        // mode: 'no-cors',
       },
     );
     let json = await response.json();

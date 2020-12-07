@@ -10,6 +10,10 @@ export const PlusCircleIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name='plus-circle-outline'/>
 );
 
+export const HeartIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='heart-outline'/>
+);
+
 export const ArrowIosBackIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name='arrow-ios-back'/>
 );
