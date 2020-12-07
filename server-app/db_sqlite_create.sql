@@ -14,7 +14,7 @@ CREATE TABLE Users (
 
 CREATE TABLE Brands (
 	id integer PRIMARY KEY AUTOINCREMENT,
-	name string,
+	name text,
 	price_category integer
 );
 
