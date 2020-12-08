@@ -6,7 +6,8 @@ import cv2
 from collections import Counter
 import base64
 from utils import file_read
-from utils import color_recognition
+from cv import color_recognition
+from db.init import init_database
 
 app = Flask(__name__)
 CORS(app)
@@ -27,3 +28,4 @@ def upload_file():
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8080, debug=True)
+    # init_database(r"/usr/src/app/db/database.db")

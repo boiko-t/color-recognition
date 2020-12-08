@@ -1,5 +1,8 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+import sqlite3
+from sqlite3 import Error
+from init import init_database
 
 app = Flask(__name__)
 CORS(app)
@@ -10,6 +13,5 @@ def index():
     return jsonify(result)
 
 if __name__ == "__main__":
-    # Used when running locally only. When deploying to Cloud Run,
-    # a webserver process such as Gunicorn will serve the app.
     app.run(host="localhost", port=8080, debug=True)
+    # init_database(r"D:\html\color-recognition-app\server-app\src\db\database.db")
