@@ -1,6 +1,3 @@
-import sqlite3
-from sqlite3 import Error
-
 sql_create_brands_table = """
     CREATE TABLE IF NOT EXISTS Brands (
         id integer PRIMARY KEY,
@@ -42,27 +39,3 @@ sql_create_fav_price_categories_table = """
         price integer
     );
 """
-
-def create_table(connection, create_table_sql):
-    try:
-        cursor = connection.cursor()
-        cursor.execute(create_table_sql)
-    except Error as e:
-        print(e)
-    finally:
-        cursor.close()
-
-def init_database(db_file):
-    connection = None
-    try:
-        connection = sqlite3.connect(db_file)
-        create_table(connection, sql_create_brands_table)
-        create_table(connection, sql_create_products_table)
-        create_table(connection, sql_create_users_table)
-        create_table(connection, sql_create_fav_products_table)
-        create_table(connection, sql_create_fav_price_categories_table)
-        connection.commit()
-        print("CONNECTED to DB")
-        return connection
-    except Error as e:
-        print(e)

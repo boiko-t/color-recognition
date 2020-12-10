@@ -7,7 +7,7 @@ from collections import Counter
 import base64
 from utils import file_read
 from cv import color_recognition
-from db.init import init_database
+from db import db_requests
 
 app = Flask(__name__)
 CORS(app)
@@ -16,16 +16,23 @@ CORS(app)
 def index():
     return 'INDEX'
 
+@app.route('/brands', methods=['GET'])
+def get_brands():
+    return jsonify(brands=db_requests.get_brands())
+
+@app.route('/products', methods=['GET'])
+def get_products():
+    return jsonify(products=db_requests.get_products())
+
 @app.route('/get-color', methods=['POST'])
-def upload_file():
+def get_colors():
     if request.files:
-        image = get_image_from_file(request.files['file'])
+        image = file_read.get_image_from_file(request.files['file'])
     else:
-        image = get_image_from_data(request.data)
-    result = get_colors(image, 8)
+        image = file_read.get_image_from_data(request.data)
+    result = color_recognition.get_colors(image, 8)
     return jsonify(colors=result)
 
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8080, debug=True)
-    # init_database(r"/usr/src/app/db/database.db")
