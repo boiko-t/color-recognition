@@ -3,7 +3,7 @@ export interface Product {
 	name: string;
 	color: string;
     brand: Brand;
-    isFavorite: boolean;
+    isFavorite?: boolean;
 }
 
 export interface Brand {

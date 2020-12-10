@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dimensions, View } from 'react-native';
 import { imagePickerPermissionRequest } from '../../components/image-picker.helper';
 import { getColorsFromImage } from '../../services/APIProvider';
@@ -14,12 +14,20 @@ import {
 import { HeartIcon } from '../../components/icons';
 import { Product } from '../../types/Entities';
 import TopNavigationMain from '../../menus/top-menu-main.component';
-import { data } from './data';
+import { getProducts } from './../../services/APIProvider';
+// import { data } from './data';
 
-export default ({ navigation, title }): React.ReactElement => {
+export default ({ navigation, title, data }): React.ReactElement => {
   const styles = useStyleSheet(themedStyles);
-  const [imageUrl, setImageUrl] = useState<null | string>(null);
-  const [selectedColors, setSelectedColors] = useState<Array<string>>([]);
+  const [dataState, setDataState] = useState(data);
+
+  useEffect(() => {
+    (async function () {
+      if(!dataState) {
+        setDataState(await getProducts());
+      }
+    }());
+  }, []);
 
   const renderItemFooter = (item: Product): React.ReactElement => (
     <View style={styles.itemFooter}>
@@ -60,7 +68,7 @@ export default ({ navigation, title }): React.ReactElement => {
       <Layout style={styles.container}>
         <List
           contentContainerStyle={styles.productList}
-          data={data}
+          data={dataState}
           numColumns={2}
           renderItem={renderProductItem}
         />

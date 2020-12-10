@@ -1,43 +1,59 @@
 import { Platform } from 'react-native';
-import { AppConfigs } from '../AppConfigs';
 import { ImagePickerResult } from 'expo-image-picker';
+import { AppConfigs } from '../AppConfigs';
+import { Brand, Product } from '../types/Entities';
+import { transformImageToFormData } from './utils';
 
-export const getColorsFromImage = async (image): Promise<Array<string>> => {
-  let result;
-  let contentType: string = 'multipart/form-data';
-
-  if (Platform.OS !== 'web') {
-    result = new FormData();
-    let filename = image.uri.split('/').pop() as string;
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-    result.append('file', { uri: image.uri, name: filename, type });
-    console.log(filename);
-    console.log(filename);
-  } else {
-    contentType = 'text';
-    // let [_, fileType, uri] = image.uri.match(/data:image\/(.*);base64(.*)/);
-    result = image.uri.match(/data:image\/(.*);base64(.*)/)[2];
-    // result = new FormData();
-    // result.append('file', {
-    //   uri: image.uri,
-    //   name: `image.${fileType}`,
-    //   type: `image/${fileType}`,
-    // });
-  }
+export const getColorsFromImage = async (
+  image: ImagePickerResult
+): Promise<Array<string>> => {
+  let contentType: string =
+    Platform.OS === 'web' ? 'text' : 'multipart/form-data';
 
   try {
     let response: Response = await fetch(
       `${AppConfigs.APIAddressLocal}/get-color`,
       {
         method: 'POST',
-        body: result,
+        body: transformImageToFormData(image),
         headers: { 'Content-Type': contentType },
-        // mode: 'no-cors',
-      },
+      }
     );
     let json = await response.json();
     return json.colors;
+  } catch (e) {
+    console.warn(e);
+    return [];
+  }
+};
+
+export const getBrands = async (): Promise<Brand[]> => {
+  try {
+    let response: Response = await fetch(
+      `${AppConfigs.APIAddressLocal}/brands`,
+      { method: 'GET' }
+    );
+    let json = await response.json();
+    return json.brands.map((item) => ({ ...item } as Brand));
+  } catch (e) {
+    console.warn(e);
+    return [];
+  }
+};
+
+export const getProducts = async (): Promise<Product[]> => {
+  try {
+    let response: Response = await fetch(
+      `${AppConfigs.APIAddressLocal}/products`,
+      { method: 'GET' }
+    );
+    let json = await response.json();
+    return json.products.map(item => ({
+      id: item.id,
+      name: item.name,
+      color: item.color,
+      brand: { id: 0, name: item.brand, price: item.price } as Brand,
+    } as Product));
   } catch (e) {
     console.warn(e);
     return [];
