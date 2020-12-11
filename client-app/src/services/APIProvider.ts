@@ -41,10 +41,11 @@ export const getBrands = async (): Promise<Brand[]> => {
   }
 };
 
-export const getProducts = async (): Promise<Product[]> => {
+export const getProducts = async (brandId?: number): Promise<Product[]> => {
+  const brandIdParameter:string = brandId? `?brandId=${brandId}` : '';
   try {
     let response: Response = await fetch(
-      `${AppConfigs.APIAddressLocal}/products`,
+      `${AppConfigs.APIAddressLocal}/products${brandIdParameter}`,
       { method: 'GET' }
     );
     let json = await response.json();
@@ -52,7 +53,7 @@ export const getProducts = async (): Promise<Product[]> => {
       id: item.id,
       name: item.name,
       color: item.color,
-      brand: { id: 0, name: item.brand, price: item.price } as Brand,
+      brand: { id: item.brandId, name: item.brand, price: item.price } as Brand,
     } as Product));
   } catch (e) {
     console.warn(e);

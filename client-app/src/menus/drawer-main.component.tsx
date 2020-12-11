@@ -8,13 +8,13 @@ import {
   Layout,
   Text,
 } from '@ui-kitten/components';
-import { BookIcon, HomeIcon } from '../components/icons';
+import { ArchiveIcon, ColorPaletteIcon, HomeIcon } from '../components/icons';
 import {navigationList} from '../types/Navigation';
 
 export default ({ navigation }): ReactElement => {
   const onItemSelect = (index: IndexPath): void => {
     navigation.toggleDrawer();
-    navigation.navigate(navigationList[index.row].path);
+    navigation.navigate(navigationList[index.row].path, navigationList[index.row].defaultParameters);
   };
 
   const renderHeader = (): ReactElement => (
@@ -38,7 +38,8 @@ export default ({ navigation }): ReactElement => {
   return (
     <Drawer header={renderHeader} footer={renderFooter} onSelect={onItemSelect}>
       <DrawerItem title='Home' accessoryLeft={HomeIcon} />
-      <DrawerItem title='Products' accessoryLeft={BookIcon} />
+      <DrawerItem title='Products' accessoryLeft={ColorPaletteIcon} />
+      <DrawerItem title='Brands' accessoryLeft={ArchiveIcon} />
     </Drawer>
   );
 };

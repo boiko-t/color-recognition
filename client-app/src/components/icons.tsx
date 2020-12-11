@@ -38,6 +38,10 @@ export const ColorPaletteIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name='color-palette-outline'/>
 );
 
+export const ArchiveIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='archive-outline'/>
+);
+
 export const CloseIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name='close'/>
 );

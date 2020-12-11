@@ -6,7 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Layout, Text } from '@ui-kitten/components';
 import MainDrawer from './menus/drawer-main.component';
 import HomeScreen from './screens/home';
-import CollectionScreen from './screens/collection';
+import ProductsScreen from './screens/product/list';
+import BrandsScreen from './screens/brands/list';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -45,7 +46,8 @@ export const AppNavigator = (): React.ReactElement => {
           drawerContent={(props) => <MainDrawer {...props} />}
         >
           <Drawer.Screen name='Home' component={HomeScreen} />
-          <Drawer.Screen name='Products' component={CollectionScreen} />
+          <Drawer.Screen name='Products' component={ProductsScreen} />
+          <Drawer.Screen name='Brands' component={BrandsScreen} />
         </Drawer.Navigator>
       </SafeAreaView>
     </NavigationContainer>

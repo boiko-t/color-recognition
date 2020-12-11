@@ -14,26 +14,26 @@ import {
 import { HeartIcon } from '../../components/icons';
 import { Product } from '../../types/Entities';
 import TopNavigationMain from '../../menus/top-menu-main.component';
-import { getProducts } from './../../services/APIProvider';
+import { getProducts } from '../../services/APIProvider';
 // import { data } from './data';
 
-export default ({ navigation, title, data }): React.ReactElement => {
+export default ({ navigation, route }): React.ReactElement => {
   const styles = useStyleSheet(themedStyles);
-  const [dataState, setDataState] = useState(data);
+  const [dataState, setDataState] = useState(route.params?.data as Product[]);
 
   useEffect(() => {
     (async function () {
-      if(!dataState) {
+      if (!route.params?.data.length) {
         setDataState(await getProducts());
+      } else {
+        setDataState(route.params?.data);
       }
-    }());
-  }, []);
+    })();
+  }, [route.params?.data]);
 
   const renderItemFooter = (item: Product): React.ReactElement => (
     <View style={styles.itemFooter}>
-      <Text category='s1'>
-        {`${item.brand.price}₴`}
-      </Text>
+      <Text category='s1'>{`${item.brand.price}₴`}</Text>
       <Button
         style={styles.iconButton}
         status='danger'
@@ -45,10 +45,14 @@ export default ({ navigation, title, data }): React.ReactElement => {
   );
 
   const renderItemHeader = (backgroundColor: string): React.ReactElement => (
-    <View style={{...styles.itemHeader, backgroundColor}}/>
+    <View style={{ ...styles.itemHeader, backgroundColor }} />
   );
 
-  const renderProductItem = ({item}: {item: Product}): React.ReactElement => (
+  const renderProductItem = ({
+    item,
+  }: {
+    item: Product;
+  }): React.ReactElement => (
     <Card
       style={styles.productItem}
       header={() => renderItemHeader(item.color)}
@@ -64,7 +68,7 @@ export default ({ navigation, title, data }): React.ReactElement => {
 
   return (
     <Layout style={{ flex: 1 }}>
-      <TopNavigationMain navigation={navigation} />
+      <TopNavigationMain navigation={navigation} title={route.params.title? `${route.params.title} Products`: undefined} />
       <Layout style={styles.container}>
         <List
           contentContainerStyle={styles.productList}
