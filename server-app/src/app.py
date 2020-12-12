@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 from collections import Counter
 import base64
-from utils import file_read
+from utils import file_read, color_compare
 from cv import color_recognition
 from db import db_requests
 
@@ -22,7 +22,15 @@ def get_brands():
 
 @app.route('/products', methods=['GET'])
 def get_products():
-    return jsonify(products=db_requests.get_products())
+    brand_id = request.args.get('brandId')
+    target_product_id = request.args.get('compareToProduct')
+    target_color = request.args.get('compareToColor')
+    if (brand_id != None):
+        return jsonify(db_requests.get_products_by_brand_id(brand_id))
+    elif (target_color != None):
+        return(jsonify(color_compare.find_closest_color(target_color)))
+    else:
+        return jsonify(db_requests.get_products())
 
 @app.route('/get-color', methods=['POST'])
 def get_colors():
@@ -31,7 +39,7 @@ def get_colors():
     else:
         image = file_read.get_image_from_data(request.data)
     result = color_recognition.get_colors(image, 8)
-    return jsonify(colors=result)
+    return jsonify(result)
 
 
 if __name__ == "__main__":

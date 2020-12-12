@@ -7,5 +7,8 @@ def populate_brands(records):
 def populate_products(records):
     products = list()
     for row in records:
-        products.append({"id": row[0], "name": row[1], "color": row[2], "brand": row[3], "price": row[4]})
+        products.append(populate_product(row))
     return products
+
+def populate_product(row):
+    return {"id": row[0], "name": row[1], "color": row[2], "brand": row[3], "brandId": row[4], "price": row[5]}
