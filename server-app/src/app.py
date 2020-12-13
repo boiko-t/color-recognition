@@ -18,7 +18,7 @@ def index():
 
 @app.route('/brands', methods=['GET'])
 def get_brands():
-    return jsonify(brands=db_requests.get_brands())
+    return jsonify(db_requests.get_brands())
 
 @app.route('/products', methods=['GET'])
 def get_products():

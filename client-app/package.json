@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.0.0",
+    "@react-native-community/google-signin": "^5.0.0",
     "@react-navigation/bottom-tabs": "^5.11.2",
     "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/material-top-tabs": "^5.3.10",

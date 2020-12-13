@@ -3,6 +3,7 @@ import { ImagePickerResult } from 'expo-image-picker';
 import { AppConfigs } from '../AppConfigs';
 import { Brand, Product } from '../types/Entities';
 import { transformImageToFormData } from './utils';
+import { parseResponseToProducts } from './parser';
 
 export const getColorsFromImage = async (
   image: ImagePickerResult
@@ -20,7 +21,7 @@ export const getColorsFromImage = async (
       }
     );
     let json = await response.json();
-    return json.colors;
+    return json;
   } catch (e) {
     console.warn(e);
     return [];
@@ -34,12 +35,27 @@ export const getBrands = async (): Promise<Brand[]> => {
       { method: 'GET' }
     );
     let json = await response.json();
-    return json.brands.map((item) => ({ ...item } as Brand));
+    return json.map((item) => ({ ...item } as Brand));
   } catch (e) {
     console.warn(e);
     return [];
   }
 };
+
+export const getProductsByColor = async (color: string): Promise<Product[]> => {
+  const colorParameter:string = `?compareToColor=${color}`;
+  try {
+    let response: Response = await fetch(
+      `${AppConfigs.APIAddressLocal}/products${colorParameter}`,
+      { method: 'GET' }
+    );
+    let json = await response.json();
+    return parseResponseToProducts(json);
+  } catch (e) {
+    console.warn(e);
+    return [];
+  }
+}
 
 export const getProducts = async (brandId?: number): Promise<Product[]> => {
   const brandIdParameter:string = brandId? `?brandId=${brandId}` : '';
@@ -49,12 +65,7 @@ export const getProducts = async (brandId?: number): Promise<Product[]> => {
       { method: 'GET' }
     );
     let json = await response.json();
-    return json.products.map(item => ({
-      id: item.id,
-      name: item.name,
-      color: item.color,
-      brand: { id: item.brandId, name: item.brand, price: item.price } as Brand,
-    } as Product));
+    return parseResponseToProducts(json);
   } catch (e) {
     console.warn(e);
     return [];
