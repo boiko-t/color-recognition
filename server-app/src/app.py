@@ -1,12 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from sklearn.cluster import KMeans
-import numpy as np
-import cv2
-from collections import Counter
-import base64
-from utils import file_read, color_compare
-from cv import color_recognition
+from utils import file_read
+from cv import color_recognition, color_compare
 from db import db_requests
 
 app = Flask(__name__)

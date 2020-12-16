@@ -1,7 +1,7 @@
 import sqlite3
 from .scripts import *
 
-DATABASE_PATH = r"/usr/src/app/db/database.db"
+DATABASE_PATH = r"/app/db/database.db"
 
 class Singleton(type):
     _instances = {}
@@ -15,7 +15,7 @@ class Database(metaclass=Singleton):
 
     def connect(self):
         if self.connection is None:
-            self.connection = sqlite3.connect(DATABASE_PATH)
+            self.connection = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
             self.cursor = self.connection.cursor()
             self.__create_tables()
         return self.cursor

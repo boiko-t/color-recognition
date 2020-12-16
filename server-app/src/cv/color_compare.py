@@ -1,7 +1,7 @@
 from db import db_requests
 import numpy as np
 from .Color import Color, get_color_difference
-from .color_sort import sort_by_color_dif
+from utils.color_sort import sort_by_color_dif
 
 def find_closest_color(target_color):
     data = db_requests.get_products()
