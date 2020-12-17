@@ -5,14 +5,14 @@ import { APIProvider } from '../services/APIProvider';
 import { AuthResponseMessages } from '../types/AuthResponseMessages';
 
 export class AuthService {
-  static currentUser;
+  static currentUser: User = {} as User;
   static subscribers: Function[] = [];
 
   static init() {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user != null) {
         this.currentUser = await APIProvider.getUser(user.email);
-        this.currentUser.isAdmin(true);
+        this.currentUser.isAdmin = true;
       } else {
         this.currentUser = null;
       }

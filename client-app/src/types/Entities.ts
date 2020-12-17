@@ -10,6 +10,7 @@ export interface Brand {
 	id: number;
 	name: string;
 	price: number;
+	priceCategory?: PriceCategory;
 }
 
 export interface PriceCategory {

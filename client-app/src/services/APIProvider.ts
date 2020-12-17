@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { ImagePickerResult } from 'expo-image-picker';
 import { AppConfigs } from '../AppConfigs';
-import { Brand, Product, User } from '../types/Entities';
+import { Brand, Product, User, PriceCategory } from '../types/Entities';
 import { transformImageToFormData } from './utils';
 import { parseResponseToProducts } from './parser';
 
@@ -90,6 +90,13 @@ export class APIProvider {
     return {email: userEmail} as User;
   }
 
-  static updateUser = async (user: User) => {
+  static getPriceCategories = async (): Promise<PriceCategory[]> => {
+    return [
+      {id: 1,name: 'Economy', price: 100},
+      {id: 2,name: 'Standard', price: 125},
+      {id: 3,name: 'Luxury', price: 150}
+    ];
   }
+
+  static updateUser = async (user: User) => {}
 }

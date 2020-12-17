@@ -357,3 +357,11 @@ export const PersonIcon = (style: ImageStyle): IconElement => (
 export const EmailIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name='email-outline'/>
 );
+
+export const EditIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='edit-outline'/>
+);
+
+export const DeleteIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='trash-2-outline'/>
+);
