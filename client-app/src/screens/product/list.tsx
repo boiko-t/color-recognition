@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Dimensions, View } from 'react-native';
-import { imagePickerPermissionRequest } from '../../components/image-picker.helper';
-import { getColorsFromImage } from '../../services/APIProvider';
 import {
   Button,
   Card,
@@ -14,7 +12,7 @@ import {
 import { HeartIcon } from '../../components/icons';
 import { Product } from '../../types/Entities';
 import TopNavigationMain from '../../menus/top-menu-main.component';
-import { getProducts } from '../../services/APIProvider';
+import { APIProvider } from '../../services/APIProvider';
 // import { data } from './data';
 
 export default ({ navigation, route }): React.ReactElement => {
@@ -24,7 +22,7 @@ export default ({ navigation, route }): React.ReactElement => {
   useEffect(() => {
     (async function () {
       if (!route.params?.data.length) {
-        setDataState(await getProducts());
+        setDataState(await APIProvider.getProducts());
       } else {
         setDataState(route.params?.data);
       }

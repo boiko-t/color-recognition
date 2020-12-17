@@ -3,7 +3,7 @@ import { Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Button, Layout, StyleService, useTheme } from '@ui-kitten/components';
 import { imagePickerPermissionRequest } from '../../components/image-picker.helper';
-import { getColorsFromImage, getProductsByColor } from './../../services/APIProvider';
+import {APIProvider} from './../../services/APIProvider';
 import { PlusCircleIcon } from '../../components/icons';
 import TopNavigationMain from '../../menus/top-menu-main.component';
 
@@ -21,7 +21,7 @@ export default ({ navigation }): React.ReactElement => {
     if (!result.cancelled) {
       setImageUrl(result.uri);
       setSelectedColors([]);
-      let colors = await getColorsFromImage(result);
+      let colors = await APIProvider.getColorsFromImage(result);
       setSelectedColors(colors);
     }
   };
@@ -54,7 +54,7 @@ export default ({ navigation }): React.ReactElement => {
               key={index}
               style={{ ...styles.colorBlock, backgroundColor: color }}
               onPress={async () => {navigation.navigate('Products', { 
-                data: await getProductsByColor(color),
+                data: await APIProvider.getProductsByColor(color),
                 title: 'Search result',
               })}}
             ></TouchableOpacity>

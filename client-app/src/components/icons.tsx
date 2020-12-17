@@ -15,7 +15,7 @@ export const HeartIcon = (style: ImageStyle): IconElement => (
 );
 
 export const ArrowIosBackIcon = (style: ImageStyle): IconElement => (
-  <Icon {...style} name='arrow-ios-back'/>
+  <Icon {...style} name='arrow-back'/>
 );
 
 export const ArrowIosForwardIcon = (style: ImageStyle): IconElement => (
@@ -338,3 +338,22 @@ export const AssetTopNavigationDarkIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} pack='app' name='top-navigation-dark'/>
 );
 
+export const EyeIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='eye'/>
+);
+
+export const EyeOffIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='eye-off'/>
+);
+
+export const LockIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='lock-outline'/>
+);
+
+export const PersonIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='person'/>
+);
+
+export const EmailIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='email-outline'/>
+);

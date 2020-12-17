@@ -10,7 +10,7 @@ import {
 } from '@ui-kitten/components';
 import { Brand } from '../../types/Entities';
 import TopNavigationMain from '../../menus/top-menu-main.component';
-import { getBrands, getProducts } from '../../services/APIProvider';
+import { APIProvider } from '../../services/APIProvider';
 
 export default ({ navigation, title, data }): React.ReactElement => {
   const styles = useStyleSheet(themedStyles);
@@ -19,7 +19,7 @@ export default ({ navigation, title, data }): React.ReactElement => {
   useEffect(() => {
     (async function () {
       if (!dataState) {
-        setDataState(await getBrands());
+        setDataState(await APIProvider.getBrands());
       }
     })();
   }, []);
@@ -28,9 +28,8 @@ export default ({ navigation, title, data }): React.ReactElement => {
     <ListItem
       title={item.name}
       description={`Price ${item.price}₴`}
-      // style={styles.productItem}
       onPress={async () => {navigation.navigate('Products', { 
-        data: await getProducts(item.id),
+        data: await APIProvider.getProducts(item.id),
         title: item.name,
       })}}
     />

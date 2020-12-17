@@ -3,7 +3,7 @@ export interface Product {
 	name: string;
 	color: string;
     brand: Brand;
-    isFavorite?: boolean;
+    isFavorite: boolean;
 }
 
 export interface Brand {
@@ -14,6 +14,13 @@ export interface Brand {
 
 export interface PriceCategory {
 	id: number;
-	name?: string;
+	name: string;
 	price: number;
+}
+
+export interface User {
+	id: number;
+	email: string;
+	name: string;
+	isAdmin: boolean;
 }

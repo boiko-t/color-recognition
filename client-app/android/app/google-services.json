@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "648350385322",
+    "firebase_url": "https://mani-assistant.firebaseio.com",
+    "project_id": "mani-assistant",
+    "storage_bucket": "mani-assistant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648350385322:android:9f7722719abce10045fcd3",
+        "android_client_info": {
+          "package_name": "com.recognitionapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648350385322-ur2djq7qrk6a26v4gif618u7j343bt84.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.recognitionapp",
+            "certificate_hash": "fc7c4b3742bf88a5c079afab2a3703d83551bbf9"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5D2Xe2cAK_p9vT9LSf8pTwtgtvG5f72Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

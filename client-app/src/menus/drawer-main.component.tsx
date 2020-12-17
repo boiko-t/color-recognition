@@ -1,20 +1,38 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   Avatar,
+  Button,
   Drawer,
   DrawerItem,
   IndexPath,
   Layout,
   Text,
 } from '@ui-kitten/components';
-import { ArchiveIcon, ColorPaletteIcon, HomeIcon } from '../components/icons';
-import {navigationList} from '../types/Navigation';
+import {
+  ArchiveIcon,
+  ColorPaletteIcon,
+  HomeIcon,
+  PersonIcon,
+} from '../components/icons';
+import { navigationList } from '../types/Navigation';
+import { AuthService } from '../services/AuthService';
 
 export default ({ navigation }): ReactElement => {
+  const [currentUser, setCurrentUser] = useState();
+
+  useEffect(() => {
+    AuthService.subscribe(() => {
+      setCurrentUser(AuthService.currentUser)
+    });
+  }, []);
+
   const onItemSelect = (index: IndexPath): void => {
     navigation.toggleDrawer();
-    navigation.navigate(navigationList[index.row].path, navigationList[index.row].defaultParameters);
+    navigation.navigate(
+      navigationList[index.row].path,
+      navigationList[index.row].defaultParameters
+    );
   };
 
   const renderHeader = (): ReactElement => (
@@ -22,17 +40,38 @@ export default ({ navigation }): ReactElement => {
       <View style={styles.profileContainer}>
         <Avatar
           size='giant'
-          source={require('../assets/images/image-app-icon.png')}
+          source={require('../assets/images/image-app-icon.jpg')}
         />
         <Text style={styles.profileName} category='h6'>
-          Kitten Tricks
+          Nails Assistant
         </Text>
       </View>
     </Layout>
   );
 
   const renderFooter = (): ReactElement => (
-    <Text style={styles.footer} category='c1'>Build by Taisa Boiko</Text>
+    <>
+      { currentUser ?
+        <Button
+          style={styles.signInButton}
+          status='info'
+          accessoryLeft={PersonIcon}
+          appearance='outline'
+          onPress={() => AuthService.signOut()}
+        >
+          Sing Out
+        </Button> :
+        <Button
+          style={styles.signInButton}
+          status='info'
+          accessoryLeft={PersonIcon}
+          appearance='outline'
+          onPress={() => navigation.navigate('SignIn')}
+        >
+          Sing In
+        </Button>
+      }
+    </>
   );
 
   return (
@@ -63,5 +102,9 @@ const styles = StyleSheet.create({
   },
   profileName: {
     marginHorizontal: 16,
+  },
+  signInButton: {
+    marginHorizontal: 16,
+    marginBottom: 20,
   },
 });
