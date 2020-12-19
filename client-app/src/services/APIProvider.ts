@@ -7,7 +7,7 @@ import { parseResponseToProducts } from './parser';
 import { AuthService } from './AuthService';
 
 export class APIProvider {
-  static currentAddress = AppConfigs.APIAddressLocal;
+  static currentAddress = AppConfigs.APIAddress;
 
   static getColorsFromImage = async (
     image: ImagePickerResult
@@ -135,12 +135,10 @@ export class APIProvider {
   static toggleFavoriteProduct = async (product: Product) => {
     const action = product.isFavorite ? 'set-favorite' : 'remove-favorite'
     try {
-      let response: Response = await fetch(
+      await fetch(
         `${APIProvider.currentAddress}/products/${action}?userId=${AuthService.currentUser.id}&productId=${product.id}`,
         { method: 'POST' }
       );
-      let json = await response.json();
-      return parseResponseToProducts(json);
     } catch (e) {
       console.warn(e);
       return [];
