@@ -17,13 +17,14 @@ import {
 } from '../components/icons';
 import { navigationList } from '../types/Navigation';
 import { AuthService } from '../services/AuthService';
+import { AppConfigs } from '../AppConfigs';
 
 export default ({ navigation }): ReactElement => {
   const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
     AuthService.subscribe(() => {
-      setCurrentUser(AuthService.currentUser)
+      setCurrentUser(AuthService.currentUser);
     });
   }, []);
 
@@ -42,16 +43,23 @@ export default ({ navigation }): ReactElement => {
           size='giant'
           source={require('../assets/images/image-app-icon.jpg')}
         />
-        <Text style={styles.profileName} category='h6'>
-          Nails Assistant
-        </Text>
+        <View>
+          <Text style={styles.profileName} category='h6'>
+            {AppConfigs.Name}
+          </Text>
+          {currentUser && (
+            <Text style={styles.profileName} category='c2'>
+              Welcome, {currentUser.name}
+            </Text>
+          )}
+        </View>
       </View>
     </Layout>
   );
 
   const renderFooter = (): ReactElement => (
     <>
-      { currentUser ?
+      {currentUser ? (
         <Button
           style={styles.signInButton}
           status='info'
@@ -60,7 +68,8 @@ export default ({ navigation }): ReactElement => {
           onPress={() => AuthService.signOut()}
         >
           Sing Out
-        </Button> :
+        </Button>
+      ) : (
         <Button
           style={styles.signInButton}
           status='info'
@@ -70,7 +79,7 @@ export default ({ navigation }): ReactElement => {
         >
           Sing In
         </Button>
-      }
+      )}
     </>
   );
 

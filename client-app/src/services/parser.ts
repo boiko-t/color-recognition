@@ -5,6 +5,7 @@ export const parseResponseToProducts = (response): Product[] => {
         id: item.id,
         name: item.name,
         color: item.color,
+        isFavorite: item.isFavorite,
         brand: { id: item.brandId, name: item.brand, price: item.price } as Brand,
       } as Product));
 }

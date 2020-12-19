@@ -2,7 +2,7 @@ export enum AppConfigs {
   Name = 'Manicure Assistant',
   Author = 'Taisa Boiko',
   APIAddress = 'https://app-sfc5k4dcaa-ew.a.run.app',
-  APIAddressLocal = 'http://172.28.250.225:5000',
+  APIAddressLocal = 'http://localhost:5000',
 }
 
 export const FirebaseConfigAndroid = {

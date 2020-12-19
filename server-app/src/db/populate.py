@@ -11,4 +11,7 @@ def populate_products(records):
     return products
 
 def populate_product(row):
-    return {"id": row[0], "name": row[1], "color": row[2], "brand": row[3], "brandId": row[4], "price": row[5]}
+    return {"id": row[0], "name": row[1], "color": row[2], "brand": row[3], "brandId": row[4], "price": row[5], "isFavorite": bool(row[6])}
+
+def populate_user(row):
+    return {"id": row[0], "name": row[1], "email": row[2], "isAdmin": bool(row[3])}

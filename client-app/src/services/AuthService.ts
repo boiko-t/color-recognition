@@ -12,7 +12,7 @@ export class AuthService {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user != null) {
         this.currentUser = await APIProvider.getUser(user.email);
-        this.currentUser.isAdmin = true;
+        console.log(this.currentUser);
       } else {
         this.currentUser = null;
       }

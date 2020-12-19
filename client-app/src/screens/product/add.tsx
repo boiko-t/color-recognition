@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Layout,
@@ -10,60 +10,60 @@ import {
   StyleService,
   useStyleSheet,
 } from '@ui-kitten/components';
+import { useFocusEffect } from '@react-navigation/native';
+import { ImagePickerComponent } from '../../components/image-picker.component';
 import TopNavigationMain from '../../menus/top-menu-inner.component';
 import { APIProvider } from '../../services/APIProvider';
-import { Brand, PriceCategory } from '../../types/Entities';
+import { Brand, Product } from '../../types/Entities';
 
 export default ({ navigation, route }): React.ReactElement => {
   const styles = useStyleSheet(themedStyles);
-  const [brand, setBrand] = useState<Brand>(route.params?.brand);
-  const [selectedPriceIndex, setSelectedPriceIndex] = useState<IndexPath>();
-  const [priceCategories, setPriceCategories] = useState<PriceCategory[]>([]);
+  const [product, setProduct] = useState<Product>({} as Product);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [selectedBrandIndex, setSelectedBrandIndex] = useState<IndexPath>();
 
-  useEffect(() => {
-    setBrand(route.params?.brand);
-  }, [route.params?.brand]);
-
-  useEffect(() => {
-    (async () => {
-      const prices = await APIProvider.getPriceCategories();
-      setPriceCategories(prices);
-      const priceIndex =
-        prices.findIndex((item) => item.price === brand.price) || 0;
-      setBrand({ priceCategory: prices[priceIndex], ...brand });
-      setSelectedPriceIndex(new IndexPath(priceIndex));
-    })();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      (async function () {
+        setBrands(await APIProvider.getBrands());
+      })();
+    }, [])
+  );
 
   return (
     <Layout style={{ flex: 1 }}>
-      <TopNavigationMain navigation={navigation} title={`Edit ${brand.name}`} />
+      <TopNavigationMain navigation={navigation} title='Add new product' />
       <Layout style={styles.container}>
+        <ImagePickerComponent
+          style={{ marginTop: 20 }}
+          selectedColorStyle={{transform: [{ scaleY: 1.3 }]}}
+          onColorSelect={(color) => setProduct({ ...product, color })}
+        />
         <Input
           status='control'
           autoCapitalize='none'
-          placeholder='Brand Name'
+          placeholder='Product Name'
           label={() => <Text category='p2'>Enter name</Text>}
           status='basic'
           style={styles.marginTop}
-          value={brand.name}
-          onChangeText={(name) => setBrand({ ...brand, name })}
+          value={product.name}
+          onChangeText={(name) => setProduct({ ...product, name })}
         />
         <Select
-          selectedIndex={selectedPriceIndex}
+          selectedIndex={selectedBrandIndex}
           label={() => <Text category='p2'>Select price category</Text>}
-          value={brand.priceCategory?.name}
+          value={product.brand?.name}
           style={styles.marginTop}
           onSelect={(index) => {
-            setSelectedPriceIndex(new IndexPath(index.row));
-            setBrand({
-              ...brand,
-              priceCategory: { ...priceCategories[index.row] },
+            setSelectedBrandIndex(new IndexPath(index.row));
+            setProduct({
+              ...product,
+              brand: { ...brands[index.row] },
             });
           }}
         >
-          {priceCategories.map((item) => (
-            <SelectItem key={item.id} title={`${item.name} - ${item.price}₴`} />
+          {brands.map((item) => (
+            <SelectItem key={item.id} title={item.name} />
           ))}
         </Select>
         <Layout style={styles.flexEnd}>
@@ -71,7 +71,7 @@ export default ({ navigation, route }): React.ReactElement => {
             style={styles.submitButton}
             size='small'
             status='success'
-            onPress={() => APIProvider.updateBrand(brand).then(navigation.goBack)}
+            onPress={() => APIProvider.addProduct(product).then(navigation.goBack)}
           >
             Save
           </Button>

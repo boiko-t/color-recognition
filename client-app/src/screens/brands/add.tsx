@@ -10,34 +10,27 @@ import {
   StyleService,
   useStyleSheet,
 } from '@ui-kitten/components';
+import { useFocusEffect } from '@react-navigation/native';
 import TopNavigationMain from '../../menus/top-menu-inner.component';
 import { APIProvider } from '../../services/APIProvider';
 import { Brand, PriceCategory } from '../../types/Entities';
 
 export default ({ navigation, route }): React.ReactElement => {
   const styles = useStyleSheet(themedStyles);
-  const [brand, setBrand] = useState<Brand>(route.params?.brand);
+  const [brand, setBrand] = useState<Brand>({} as Brand);
   const [selectedPriceIndex, setSelectedPriceIndex] = useState<IndexPath>();
   const [priceCategories, setPriceCategories] = useState<PriceCategory[]>([]);
-
-  useEffect(() => {
-    setBrand(route.params?.brand);
-  }, [route.params?.brand]);
 
   useEffect(() => {
     (async () => {
       const prices = await APIProvider.getPriceCategories();
       setPriceCategories(prices);
-      const priceIndex =
-        prices.findIndex((item) => item.price === brand.price) || 0;
-      setBrand({ priceCategory: prices[priceIndex], ...brand });
-      setSelectedPriceIndex(new IndexPath(priceIndex));
     })();
   }, []);
 
   return (
     <Layout style={{ flex: 1 }}>
-      <TopNavigationMain navigation={navigation} title={`Edit ${brand.name}`} />
+      <TopNavigationMain navigation={navigation} title='Add new brand' />
       <Layout style={styles.container}>
         <Input
           status='control'
@@ -71,7 +64,7 @@ export default ({ navigation, route }): React.ReactElement => {
             style={styles.submitButton}
             size='small'
             status='success'
-            onPress={() => APIProvider.updateBrand(brand).then(navigation.goBack)}
+            onPress={() => APIProvider.addBrand(brand).then(navigation.goBack)}
           >
             Save
           </Button>

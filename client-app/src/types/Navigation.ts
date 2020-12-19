@@ -12,7 +12,7 @@ export const navigationList: NavigationItem[] = [
   {
     index: 1,
     path: 'Products',
-    defaultParameters: {data: []}
+    defaultParameters: {data: null}
   },
   {
     index: 2,

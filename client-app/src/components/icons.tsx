@@ -14,6 +14,10 @@ export const HeartIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name='heart-outline'/>
 );
 
+export const HeartFilledIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name='heart'/>
+);
+
 export const ArrowIosBackIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name='arrow-back'/>
 );

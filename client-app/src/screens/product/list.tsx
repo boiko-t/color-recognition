@@ -9,25 +9,41 @@ import {
   StyleService,
   useStyleSheet,
 } from '@ui-kitten/components';
-import { HeartIcon } from '../../components/icons';
+import { useFocusEffect } from '@react-navigation/native';
+import { HeartIcon, HeartFilledIcon } from '../../components/icons';
 import { Product } from '../../types/Entities';
 import TopNavigationMain from '../../menus/top-menu-main.component';
 import { APIProvider } from '../../services/APIProvider';
-// import { data } from './data';
+import { AuthService } from '../../services/AuthService';
+import { EditIcon, DeleteIcon } from '../../components/icons';
+import { User } from '../../types/Entities';
 
 export default ({ navigation, route }): React.ReactElement => {
   const styles = useStyleSheet(themedStyles);
   const [dataState, setDataState] = useState(route.params?.data as Product[]);
+  const [currentUser, setCurrentUser] = useState<User>(AuthService.currentUser);
 
   useEffect(() => {
-    (async function () {
-      if (!route.params?.data.length) {
-        setDataState(await APIProvider.getProducts());
-      } else {
-        setDataState(route.params?.data);
-      }
-    })();
-  }, [route.params?.data]);
+    AuthService.subscribe(() => {
+      setCurrentUser(AuthService.currentUser);
+    });
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      (async function () {
+        if (!route.params?.data) {
+          setDataState(await APIProvider.getProducts());
+        } else {
+          setDataState(route.params?.data);
+        }
+      })();
+    }, [route.params])
+  );
+
+  const getColumnsCount = () => {
+    return Dimensions.get('window').width > 768 ? 4 : 2;
+  };
 
   const renderItemFooter = (item: Product): React.ReactElement => (
     <View style={styles.itemFooter}>
@@ -36,14 +52,44 @@ export default ({ navigation, route }): React.ReactElement => {
         style={styles.iconButton}
         status='danger'
         appearance='outline'
-        accessoryLeft={HeartIcon}
-        // onPress={() => onItemCartPress(info.index)}
+        accessoryLeft={(props) => {
+          return item.isFavorite ? (
+            <HeartFilledIcon style={props.style} />
+          ) : (
+            <HeartIcon style={props.style} />
+          );
+        }}
+        onPress={async () => {
+          item.isFavorite = !item.isFavorite;
+          await APIProvider.toggleFavoriteProduct(item);
+        }}
       />
     </View>
   );
 
-  const renderItemHeader = (backgroundColor: string): React.ReactElement => (
-    <View style={{ ...styles.itemHeader, backgroundColor }} />
+  const renderItemHeader = (
+    backgroundColor: string,
+    item: Product
+  ): React.ReactElement => (
+    <View style={{ ...styles.itemHeader, backgroundColor }}>
+      {currentUser?.isAdmin && (
+        <View style={styles.productControls}>
+          <Button
+            appearance='ghost'
+            style={styles.productControl}
+            status='control'
+            accessoryLeft={EditIcon}
+            onPress={() => navigation.navigate('EditProduct', { data: item })}
+          />
+          <Button
+            appearance='ghost'
+            style={styles.productControl}
+            status='control'
+            accessoryLeft={DeleteIcon}
+          />
+        </View>
+      )}
+    </View>
   );
 
   const renderProductItem = ({
@@ -53,7 +99,7 @@ export default ({ navigation, route }): React.ReactElement => {
   }): React.ReactElement => (
     <Card
       style={styles.productItem}
-      header={() => renderItemHeader(item.color)}
+      header={() => renderItemHeader(item.color, item)}
       footer={() => renderItemFooter(item)}
       // onPress={() => {}}
     >
@@ -66,12 +112,29 @@ export default ({ navigation, route }): React.ReactElement => {
 
   return (
     <Layout style={{ flex: 1 }}>
-      <TopNavigationMain navigation={navigation} title={route.params.title? `${route.params.title} Products`: undefined} />
+      <TopNavigationMain
+        navigation={navigation}
+        title={
+          route.params.title ? `${route.params.title} Products` : undefined
+        }
+      />
       <Layout style={styles.container}>
+        {currentUser?.isAdmin && (
+          <Layout style={styles.flexEnd}>
+            <Button
+              style={styles.addButton}
+              size='small'
+              status='info'
+              onPress={() => navigation.navigate('AddProduct')}
+            >
+              Add new
+            </Button>
+          </Layout>
+        )}
         <List
           contentContainerStyle={styles.productList}
           data={dataState}
-          numColumns={2}
+          numColumns={getColumnsCount()}
           renderItem={renderProductItem}
         />
       </Layout>
@@ -107,5 +170,25 @@ const themedStyles = StyleService.create({
   },
   iconButton: {
     paddingHorizontal: 0,
+  },
+  productControls: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  productControl: {
+    width: 30,
+    height: 30,
+  },
+  addButton: {
+    marginTop: 16,
+    width: 120,
+  },
+  flexEnd: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginRight: 16,
+    backgroundColor: 'transparent',
   },
 });
